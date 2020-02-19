@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Here are the contents of the database:</h1>
+        <tbody>
+            <tr th:each="user: ${userList}">
+                <td th:text="${user.name}" />
+                <td th:text="${user.teamName}" />
+            </tr>
+        </tbody>
+        <h1>Insert into the database below:</h1>
+        <form action="/users/create" method="POST">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name"><br>
+            <label for="teamname">Team name:</label><br>
+            <input type="text" id="teamname" name="teamname"><br>
+            <label for ="salary">Salary:</label><br>
+            <input type="number" id="salary" name="salary"><br>
+            <input type="submit" value="Submit">
+        </form>
+        <br><br><br>
+        <h1>Edit a database entry below:</h1>
+        <h4>(Enter name of user you'd like to edit, then enter new values)</h4>
+        <form action = "users/edit" method="POST">
+            <label for="name">User name:</label><br>
+            <input type="text" id="name" name="name"><br>
+            <label for="newname">New name:</label><br>
+            <input type="text" id="newname" name="newname"><br>
+            <label for="newteamname">New team name:</label><br>
+            <input type="text" id="newteamname" name="newteamname"><br>
+            <label for="newsalary">New Salary:</label><br>
+            <input type="number" id="newsalary" name="newsalary"><br>
+            <input type="submit" value="Submit">
+        </form>
+        <h1>Delete a user from the database below:</h1>
+        <form action = "users/delete" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br>
+            <input type="submit" value="Submit">
+        </for>
+    </body>
+</html>
