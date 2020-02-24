@@ -3,39 +3,39 @@ package com.techprimers.db.resources;
 import com.techprimers.db.model.Users;
 import com.techprimers.db.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 
-
 import java.util.List;
 
 
-@RestController
+@Controller
 @RequestMapping("/users")
-public class UsersResource {
+public class UsersController {
 
     @Autowired
     UsersRepository usersRepository;
 
-
-
     @GetMapping("/")
-    public String index(Model model) {
-        //Map<String, String> map = new HashMap<>();
+    public ModelAndView index(Model model) {
         List<Users> users = usersRepository.findAll();
+        ModelAndView mav = new ModelAndView();
         model.addAttribute("usersList", users);
-        return "index.html";
+        mav.addObject("users", users);
+        mav.setViewName("show");
+        return mav;
     }
 
     @GetMapping("/show")
     public ModelAndView show(Model model){
         List<Users> users = usersRepository.findAll();
+        //ModelAndView mav = new ModelAndView();
         model.addAttribute("users", users);
         return new ModelAndView("show", "users", model);
-        //return new ModelAndView("show", "userList", model);
     }
 
     @PostMapping("/edit")
@@ -55,14 +55,16 @@ public class UsersResource {
     }
 
     @PostMapping("/delete")
-    public List<Users> delete (HttpServletRequest req){
+    public ModelAndView delete (HttpServletRequest req){
         List<Users> userList = usersRepository.findByName(req.getParameter("name"));
         for (Users user : userList) {
             usersRepository.delete(user);
         }
-
-
-        return usersRepository.findAll();
+        List<Users> users = usersRepository.findAll();
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("users", users);
+        mav.setViewName("show");
+        return mav;
     }
     /*
     @PostMapping("/find")
@@ -71,14 +73,18 @@ public class UsersResource {
     }
     */
     @PostMapping("/create")
-    public List<Users> create(HttpServletRequest req){
+    public ModelAndView create(HttpServletRequest req){
         String name = req.getParameter("name");
         String teamName = req.getParameter("teamname");
         String salaryStr = req.getParameter("salary");
         int salary = Integer.parseInt(salaryStr);
         Users newUser = new Users(name, teamName, salary);
         usersRepository.save(newUser);
-        return usersRepository.findAll();
+        ModelAndView mav = new ModelAndView();
+        List<Users> users = usersRepository.findAll();
+        mav.addObject("users", users);
+        mav.setViewName("show");
+        return mav;
     }
 
     @GetMapping("/all")

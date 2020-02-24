@@ -2,10 +2,17 @@
 <html>
     <body>
         <h1>Here are the contents of the database:</h1>
-        <tbody>
-            <tr th:each="user: ${users}">
-                <td th:text="${user}" />
+        <table border="1">
+            <tr>
+                <th>Name</th>
+                <th>Team Name</th>
+                <th>Salary</th>
             </tr>
-        </tbody>
+            <tr th:each="user: ${users}">
+                <td th:text="${user.name}" />
+                <td th:text="${user.teamName}" />
+                <td th:text="${user.salary}" />
+            </tr>
+        </table>
     </body>    
 </html>
