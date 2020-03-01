@@ -20,11 +20,11 @@ import java.util.List;
 public class ContainersController {
 
     @Autowired
-    ContainersRepository ContainersRepository;
+    ContainersRepository containersRepository;
 
     @GetMapping("/")
     public ModelAndView index(Model model) {
-        List<Containers> containers = ContainersRepository.findAll();
+        List<Containers> containers = containersRepository.findAll();
         ModelAndView mav = new ModelAndView();
         mav.addObject("containers", containers);
         mav.setViewName("show");
@@ -33,7 +33,7 @@ public class ContainersController {
 
     @GetMapping("/show")
     public ModelAndView show(Model model){
-        List<Containers> containers = ContainersRepository.findAll();
+        List<Containers> containers = containersRepository.findAll();
         //ModelAndView mav = new ModelAndView();
         model.addAttribute("containers", containers);
         return new ModelAndView("show", "users", model);
@@ -41,19 +41,19 @@ public class ContainersController {
 
     @PostMapping("/edit")
     public ModelAndView edit(HttpServletRequest req){
-        List<Containers> containersList = ContainersRepository.findByName(req.getParameter("record_number"));
+        List<Containers> containersList = containersRepository.findById(Integer.parseInt(req.getParameter("id")));
         
         for (Containers container : containersList){
-            container.setRecordNumber(Integer.parseInt(req.getParameter("record_number")));
+            container.setId(Integer.parseInt(req.getParameter("id")));
             container.setCraneNumber(Integer.parseInt(req.getParameter("crane_number")));
             container.setShipNumber(Integer.parseInt(req.getParameter("ship_number")));
             container.setBadgeNumber(Integer.parseInt(req.getParameter("badge_number")));
-            //container.setTransmittedDatetime(new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").parse(req.getParameter("transmitted_datetime")));
+            container.setTransmittedDatetime(new Date());
 
-            container.setDriverShiftNumber(Double.parseDouble(req.getParameter("driver_shift_number")));
-            ContainersRepository.save(container);
+            container.setDriverShiftNumber(Integer.parseInt(req.getParameter("driver_shift_number")));
+            containersRepository.save(container);
         }
-        List<Containers> containers = ContainersRepository.findAll();
+        List<Containers> containers = containersRepository.findAll();
         ModelAndView mav = new ModelAndView();
         mav.addObject("containers", containers);
         mav.setViewName("show");
@@ -63,11 +63,11 @@ public class ContainersController {
 
     @PostMapping("/delete")
     public ModelAndView delete (HttpServletRequest req){
-        List<Containers> containersList = ContainersRepository.findByName(req.getParameter("record_number"));
+        List<Containers> containersList = containersRepository.findById(Integer.parseInt(req.getParameter("id")));
         for (Containers container : containersList) {
-            ContainersRepository.delete(container);
+            containersRepository.delete(container);
         }
-        List<Containers> containers = ContainersRepository.findAll();
+        List<Containers> containers = containersRepository.findAll();
         ModelAndView mav = new ModelAndView();
         mav.addObject("containers", containers);
         mav.setViewName("show");
@@ -82,16 +82,15 @@ public class ContainersController {
     @PostMapping("/create")
     public ModelAndView create(HttpServletRequest req){
         // badge_number, transmitted_datetime, driver_shift_number
-        Integer record_number = Integer.parseInt(req.getParameter("record_number"));
         Integer crane_number = Integer.parseInt(req.getParameter("crane_number"));
         Integer ship_number = Integer.parseInt(req.getParameter("ship_number"));
-        Integer badge_number = Integer.parseInt(req.getParameter("badge_humber"));
+        Integer badge_number = 17;
         Date transmitted_datetime = new Date();
-        Double driver_shift_number = Double.parseDouble(req.getParameter("driver_shift_number"));
-        Containers new_container = new Containers(record_number, crane_number, ship_number, badge_number, transmitted_datetime, driver_shift_number);
-        ContainersRepository.save(new_container);
+        Integer driver_shift_number = Integer.parseInt(req.getParameter("driver_shift_number"));
+        Containers new_container = new Containers(crane_number, ship_number, badge_number, transmitted_datetime, driver_shift_number);
+        containersRepository.save(new_container);
         ModelAndView mav = new ModelAndView();
-        List<Containers> containers = ContainersRepository.findAll();
+        List<Containers> containers = containersRepository.findAll();
         mav.addObject("containers", containers);
         mav.setViewName("show");
         return mav;

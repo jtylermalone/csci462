@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <a href="/users/">Click here to view all containers</a>
+        <a href="/containers/">Click here to view all containers</a>
         <h1>Insert into the database below:</h1>
         <form action="containers/create" method="POST">
             <label for="crane_number">Crane Number:</label><br>
@@ -9,7 +9,7 @@
             <label for="ship_number">Ship Number:</label><br>
             <input type="number" id="ship_number" name="ship_number"><br>
             <label for="badge_number">Badge Number:</label><br>
-            <input type="number" id="badge_number" name="ship_number"><br>
+            <input type="number" id="badge_number" name="badge_numberr"><br>
             <label for="badge_number">Transmitted Datetime:</label><br>
             <input type="datetime" id="transmitted_datetime" name="transmitted_datetime"><br>
             <label for="driver_shift_number">Driver Shift Number:</label><br>
@@ -18,25 +18,23 @@
         </form>
         <h1>Edit a database entry below:</h1>
         <h4>(Enter name of user you'd like to edit, then enter new values)</h4>
-        <form action = "users/edit" method="POST">
-            <label for="record_number">Record Number:</label>
-            <input type="number" id="record_number" name="record_number">
+        <form action = "containers/edit" method="POST">
             <label for="crane_number">Crane Number:</label><br>
             <input type="number" id="crane_number" name="crane_number"><br>
             <label for="ship_number">Ship Number:</label><br>
             <input type="number" id="ship_number" name="ship_number"><br>
             <label for="badge_number">Badge Number:</label><br>
-            <input type="number" id="badge_number" name="ship_number"><br>
-            <label for="badge_number">Transmitted Datetime:</label><br>
+            <input type="number" id="badge_number" name="badge_number"><br>
+            <label for="transmitted_datetime">Transmitted Datetime:</label><br>
             <input type="datetime" id="transmitted_datetime" name="transmitted_datetime"><br>
             <label for="driver_shift_number">Driver Shift Number:</label><br>
             <input type="number" id="driver_shift_number" name="driver_shift_number"><br>
             <input type="submit" value="Submit">
         </form>
         <h1>Delete a user from the database below:</h1>
-        <form action = "users/delete" method="POST">
+        <form action = "containers/delete" method="POST">
             <label for="record_number">Record Number:</label>
-            <input type="text" id="name" name="name"><br>
+            <input type="number" id="record_number" name="record_number"><br>
             <input type="submit" value="Submit">
         </for>
     </body>
