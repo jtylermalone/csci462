@@ -21,7 +21,7 @@ public class Containers {
     @Column(name = "Ship_Num")
     private Integer shipNumber;
     @Column(name = "Badge_Num")
-    private Integer badge_number;
+    private Integer badgeNumber;
     @Column(name = "Transmitted_Datetime")
     private Date transmitted_datetime;
     @Column(name = "Driver_Shift_Number")
@@ -30,7 +30,7 @@ public class Containers {
     public Containers(){
         this.craneNumber = 0;
         this.shipNumber = 0;
-        this.badge_number = 0;
+        this.badgeNumber = 0;
         this.transmitted_datetime = new Date();
         this.driver_shift_number = 0;
     }
@@ -39,7 +39,7 @@ public class Containers {
 
         this.craneNumber = crane_number;
         this.shipNumber = ship_number;
-        this.badge_number = badge_number;
+        this.badgeNumber = badge_number;
         this.transmitted_datetime = transmitted_datetime;
         this.driver_shift_number = driver_shift_number;
     }
@@ -69,11 +69,11 @@ public class Containers {
     }
 
     public Integer getBadgeNumber() {
-        return badge_number;
+        return badgeNumber;
     }
 
-    public void setBadgeNumber(Integer badge_number) {
-        this.badge_number = badge_number;
+    public void setBadgeNumber(Integer badgeNumber) {
+        this.badgeNumber = badgeNumber;
     }
 
     public Date getTransmittedDatetime() {
@@ -94,7 +94,7 @@ public class Containers {
 
     public String toString() {
         return String.format(
-            "Container[record_number=%d, crane_number=%s, ship_number=%s, badge_number=%d", id, craneNumber, shipNumber, badge_number
+            "Container[record_number=%d, crane_number=%s, ship_number=%s, badge_number=%d", id, craneNumber, shipNumber, badgeNumber
         );
     }
 }
