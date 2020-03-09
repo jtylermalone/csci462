@@ -2,6 +2,8 @@ package com.techprimers.db.resources;
 
 import com.techprimers.db.model.Containers;
 import com.techprimers.db.repository.ContainersRepository;
+import com.techprimers.db.model.Employees;
+import com.techprimers.db.repository.EmployeesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +25,15 @@ public class ContainersController {
     @Autowired
     ContainersRepository containersRepository;
 
+    @Autowired
+    EmployeesRepository employeesRepository;
+
     @GetMapping("/")
     public ModelAndView index(Model model) {
         List<Containers> containers = containersRepository.findAll();
         ModelAndView mav = new ModelAndView();
         mav.addObject("containers", containers);
-        mav.setViewName("show");
+        mav.setViewName("index");
         return mav;
     }
 
@@ -38,6 +43,15 @@ public class ContainersController {
         // ModelAndView mav = new ModelAndView();
         model.addAttribute("containers", containers);
         return new ModelAndView("show", "users", model);
+    }
+
+    @GetMapping("/productivity")
+    public ModelAndView productivity(Model model) {
+        List<Employees> employees = employeesRepository.findEmployees();
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("employees", employees);
+        mav.setViewName("productivity");
+        return mav;
     }
 
     @PostMapping("/edit")

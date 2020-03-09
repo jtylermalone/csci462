@@ -1,24 +1,98 @@
 <!DOCTYPE html>
-<html>
-    <body>
-        <h1>Here are the contents of the database:</h1>
-        <h3>Number of updated entries: <div th:text="${updated_entries}"></div></h3>
-        <table border="1">
-            <tr>
-                <th>Crane Number</th>
-                <th>Ship Number</th>
-                <th>Badge Number</th>
-                <th>Transmitted Datetime</th>
-                <th>Driver Shift Number</th>
-            </tr>
-            <tr th:each="container: ${containers}">
-                <td th:text="${container.craneNumber}" />
-                <td th:text="${container.shipNumber}" />
-                <td th:text="${container.badgeNumber}" />
-                <td th:text="${container.transmittedDatetime}" />
-                <td th:text="${container.driverShiftNumber}" />
-            </tr>
-        </table>
-        <a href="/">Return to home page</a>
-    </body>    
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css"></link>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <title>webapp</title>
+    <style>
+    form {
+      width:90%;
+      text-align:right;
+    }
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    </style>
+    <script type="text/javascript" class="init">
+      $('#container_table').DataTable( {
+        "lengthMenu": [ 10, 25, 50, 75, 100 ]
+      }
+
+      )
+      $(document).ready( function () {
+       $('#container_table').DataTable();
+      } );
+    </script>
+  </head>
+
+  <body>
+    <div class="row">
+      <div class="col-md-4">
+        <form id="currentVal">
+          <label for="cVesselNumber">Current Vessel Number</label>
+          <input type="text" id="cVesselNumber" name="cVesselNumber"><br></br></input>
+ 
+          <label for="cBadgeNumber">Current Badge Number</label>
+          <input type="text" id="cBadgeNumber" name="cBadgeNumber"><br></br></input>
+
+          <label for="craneNumber">Crane Number</label>
+          <input type="text" id="craneNumber" name="craneNumber"><br></br></input>
+
+          <input type="Submit" value="Show Current Records"></input>
+        </form>
+      </div>
+
+      <div class="col-md-4">
+        <form id="dateTimes">
+          <label for="dates">Date</label>
+          <div id="dates">
+            <label for="dateBeginning">Beginning</label>
+            <input type="text" id="dateBeginning" name="dateBeginning"><br></br></input>
+
+            <label for="dateEnd">End</label>
+            <input type="text" id="dateEnd" name="dateEnd"><br></br></input>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-md-4">
+        <form id="newVals">
+          <label for="nVesselNumber">New Vessel Number</label>
+          <input type="text" id="nVesselNumber" name="nVesselNumber"><br></br></input>
+ 
+          <label for="nBadgeNumber">New Badge Number</label>
+          <input type="text" id="nBadgeNumber" name="nBadgeNumber"><br></br></input>
+
+          <input type="Submit" value="Test Current Records"><br></br></input>
+        </form>
+      </div>
+    </div>
+    
+
+    <table id="container_table" style="width:100%">
+      <thead>
+        <tr>
+            <th>Crane Number</th>
+            <th>Ship Number</th>
+            <th>Badge Number</th>
+            <th>Transmitted Datetime</th>
+            <th>Driver Shift Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="container: ${containers}">
+            <td th:text="${container.craneNumber}" />
+            <td th:text="${container.shipNumber}" />
+            <td th:text="${container.badgeNumber}" />
+            <td th:text="${container.transmittedDatetime}" />
+            <td th:text="${container.driverShiftNumber}" />
+        </tr>
+      </tbody>
+    </table>
+  </body>
 </html>

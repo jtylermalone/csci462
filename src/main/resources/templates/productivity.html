@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+    <form action="containers/productivity" method="POST">
+        
+        <label for="date">Date:</label><br></br>
+        <input type="datetime" id="date" name="date"></input><br></br><br></br>
+
+        <label for="vessel_code">Vessel Code:</label><br></br>
+        <input type="number" id="vessel_code" name="vessel_code"></input><br></br>
+
+        <label for="vessel_name">Vessel Name:</label><br></br>
+        <input type="number" id="vessel_name" name="vessel_name"></input><br></br>
+
+        <label for="steamship_line">Steamship Line:</label><br></br>
+        <input type="text" id="steamship_line" name="steamship_line"></input><br></br>
+
+        <label for="line_code">Line Code:</label><br></br>
+        <input type="number" id="line_code" name="line_code"></input><br></br>
+
+        <label for="full_name">Full Name:</label><br></br>
+        <select id="full_name">
+            <option></option>
+            <option th:each="employee : ${employees}"
+                    th:value="${employee.name}"
+                    th:text="${employee.name}">
+                 </option>
+         </select>
+        
+    </form>
+</html>

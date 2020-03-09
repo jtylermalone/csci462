@@ -1,3 +1,8 @@
+const express = require("express")
+const app = express()
+const port = 80
+
+app.get('/', (req, res) => res.send(`
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -15,10 +20,7 @@
       border-collapse: collapse;
     }
     </style>
-    
   </head>
-  <script src="jquery-3.4.1.js"></script>
-
   <body>
     <div class="row">
       <div class="col-md-4">
@@ -78,3 +80,6 @@
     </table>
   </body>
 </html>
+`))
+
+app.listen(port, () => console.log(`server started on localhost:${port}`))

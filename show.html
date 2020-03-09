@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Here are the contents of the database:</h1>
+        <h3>Number of updated entries: <div th:text="${updated_entries}"></div></h3>
+        <table border="1">
+            <tr>
+                <th>Crane Number</th>
+                <th>Ship Number</th>
+                <th>Badge Number</th>
+                <th>Transmitted Datetime</th>
+                <th>Driver Shift Number</th>
+            </tr>
+            <tr th:each="container: ${containers}">
+                <td th:text="${container.craneNumber}" />
+                <td th:text="${container.shipNumber}" />
+                <td th:text="${container.badgeNumber}" />
+                <td th:text="${container.transmittedDatetime}" />
+                <td th:text="${container.driverShiftNumber}" />
+            </tr>
+        </table>
+        <a href="/">Return to home page</a>
+    </body>    
+</html>
