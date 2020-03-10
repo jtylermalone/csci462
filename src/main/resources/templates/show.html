@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"></link>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css"></link>
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <title>webapp</title>
     <style>
     form {
@@ -21,19 +21,63 @@
     <script type="text/javascript" class="init">
       $('#container_table').DataTable( {
         "lengthMenu": [ 10, 25, 50, 75, 100 ]
-      }
+      });
 
-      )
+      
+      
+            
       $(document).ready( function () {
        $('#container_table').DataTable();
+
+       $('#container_table tfoot th').each ( function () {
+         var title = $(this).text();
+         $(this).html( '<input type="text" placeholder="Search '+title+'"/>' );
+       });
+
+       var table = $('#container_table').DataTable();
+
+       table.columns().every ( function () {
+         var that = this;
+
+         $( 'input', this.footer() ).on( 'keyup change clear', function () {
+           if ( that.search() !== this.value ) {
+             that
+                .search ( this.value )
+                .draw();
+           }
+         });
+       });
       } );
+
+        $(document).on('submit', '#submit_form', function(e)  {
+          e.preventDefault();
+          
+          var current_ship_number = $('#cVesselNumber').val();
+          var current_badge_number = $('#cBadgeNumber').val();
+          var crane_number = $('#craneNumber').val();
+          var new_ship_number = $('#nVesselNumber').val();
+          var new_badge_number = $('#nBadgeNumber').val();
+          var begin_date = $('#dateBeginning').val();
+          var end_date = $('#dateEnd').val();
+
+          $.ajax ({
+            url: '/containers/edit',
+            data: { 'current_ship_number' : current_ship_number, 'current_badge_number': current_badge_number, 'crane_number': crane_number, 'new_ship_number': new_ship_number, 'new_badge_number': new_badge_number, 'begin_date' : begin_date, 'end_date' : end_date},
+            type: "POST"
+          })
+            .done(function () {
+              alert("Data saved.");
+              $( "#container_table" ).load( "show.html #container_table" );
+            });
+        })
+
     </script>
   </head>
 
   <body>
     <div class="row">
       <div class="col-md-4">
-        <form id="currentVal">
+        <form id="submit_form" action="/containers/edit" method="POST">
           <label for="cVesselNumber">Current Vessel Number</label>
           <input type="text" id="cVesselNumber" name="cVesselNumber"><br></br></input>
  
@@ -43,25 +87,14 @@
           <label for="craneNumber">Crane Number</label>
           <input type="text" id="craneNumber" name="craneNumber"><br></br></input>
 
-          <input type="Submit" value="Show Current Records"></input>
-        </form>
-      </div>
-
-      <div class="col-md-4">
-        <form id="dateTimes">
           <label for="dates">Date</label>
-          <div id="dates">
+
             <label for="dateBeginning">Beginning</label>
             <input type="text" id="dateBeginning" name="dateBeginning"><br></br></input>
 
             <label for="dateEnd">End</label>
             <input type="text" id="dateEnd" name="dateEnd"><br></br></input>
-          </div>
-        </form>
-      </div>
 
-      <div class="col-md-4">
-        <form id="newVals">
           <label for="nVesselNumber">New Vessel Number</label>
           <input type="text" id="nVesselNumber" name="nVesselNumber"><br></br></input>
  
@@ -93,6 +126,15 @@
             <td th:text="${container.driverShiftNumber}" />
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+            <th>Crane Number</th>
+            <th>Ship Number</th>
+            <th>Badge Number</th>
+            <th>Transmitted Datetime</th>
+            <th>Driver Shift Number</th>
+        </tr>
+      </tfoot>
     </table>
   </body>
 </html>
