@@ -31,7 +31,7 @@
 
        $('#container_table tfoot th').each ( function () {
          var title = $(this).text();
-         $(this).html( '<input type="text" placeholder="Search '+title+'"/>' );
+         $(this).html( '<input type="text" id = "search_ship_num" placeholder="Search '+title+'"/>' );
        });
 
        var table = $('#container_table').DataTable();
@@ -51,7 +51,8 @@
 
         $(document).on('submit', '#submit_form', function(e)  {
           e.preventDefault();
-          
+        
+          var search_value = $('#Search Crane Number').val();
           var current_ship_number = $('#cVesselNumber').val();
           var current_badge_number = $('#cBadgeNumber').val();
           var crane_number = $('#craneNumber').val();
@@ -66,8 +67,9 @@
             type: "POST"
           })
             .done(function () {
-              alert("Data saved.");
               $( "#container_table" ).load( "show.html #container_table" );
+              alert("Data saved.");
+              $('#container_table').DataTable();
             });
         })
 
@@ -102,6 +104,7 @@
           <input type="text" id="nBadgeNumber" name="nBadgeNumber"><br></br></input>
 
           <input type="Submit" value="Test Current Records"><br></br></input>
+          <input type="Reset" value="Reset"></input>
         </form>
       </div>
     </div>

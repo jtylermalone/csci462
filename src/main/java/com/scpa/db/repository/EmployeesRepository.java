@@ -1,6 +1,6 @@
-package com.techprimers.db.repository;
+package com.scpa.db.repository;
 
-import com.techprimers.db.model.Employees;
+import com.scpa.db.model.Employees;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

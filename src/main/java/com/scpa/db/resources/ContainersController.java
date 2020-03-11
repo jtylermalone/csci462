@@ -1,9 +1,9 @@
-package com.techprimers.db.resources;
+package com.scpa.db.resources;
 
-import com.techprimers.db.model.Containers;
-import com.techprimers.db.repository.ContainersRepository;
-import com.techprimers.db.model.Employees;
-import com.techprimers.db.repository.EmployeesRepository;
+import com.scpa.db.model.Containers;
+import com.scpa.db.repository.ContainersRepository;
+import com.scpa.db.model.Employees;
+import com.scpa.db.repository.EmployeesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +68,6 @@ public class ContainersController {
         Integer new_badge_number = Integer.parseInt(req.getParameter("nBadgeNumber"));
         List<Containers> containersList = containersRepository.findByTransmittedDatetimeBetween(from_date, to_date, old_badge_number, old_ship_number, crane_number);
         */
-        System.out.println("**************************");
         String begin_date = req.getParameter("begin_date");
         Date from_date = new SimpleDateFormat("yyyy/MM/dd").parse(begin_date);
         String end_date = req.getParameter("end_date");
@@ -86,7 +85,6 @@ public class ContainersController {
         Integer new_badge_number = Integer.parseInt(req.getParameter("new_badge_number"));
         System.out.println("new_badge_number: " + new_badge_number);
         List<Containers> containersList = containersRepository.findByTransmittedDatetimeBetween(from_date, to_date, old_badge_number, old_ship_number, crane_number);
-        
         Integer number_of_updated_entries = 0;
         for (Containers container : containersList){
             container.setShipNumber(new_ship_number);
