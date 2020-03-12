@@ -1,4 +1,4 @@
-package com.scpa.db;
+package com.techprimers.db;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

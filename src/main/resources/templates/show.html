@@ -51,8 +51,7 @@
 
         $(document).on('submit', '#submit_form', function(e)  {
           e.preventDefault();
-        
-          var search_value = $('#Search Crane Number').val();
+      
           var current_ship_number = $('#cVesselNumber').val();
           var current_badge_number = $('#cBadgeNumber').val();
           var crane_number = $('#craneNumber').val();
@@ -91,11 +90,11 @@
 
           <label for="dates">Date</label>
 
-            <label for="dateBeginning">Beginning</label>
-            <input type="text" id="dateBeginning" name="dateBeginning"><br></br></input>
+          <label for="dateBeginning">Beginning</label>
+          <input type="text" id="dateBeginning" name="dateBeginning"><br></br></input>
 
-            <label for="dateEnd">End</label>
-            <input type="text" id="dateEnd" name="dateEnd"><br></br></input>
+          <label for="dateEnd">End</label>
+          <input type="text" id="dateEnd" name="dateEnd"><br></br></input>
 
           <label for="nVesselNumber">New Vessel Number</label>
           <input type="text" id="nVesselNumber" name="nVesselNumber"><br></br></input>

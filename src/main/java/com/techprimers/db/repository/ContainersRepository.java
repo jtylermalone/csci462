@@ -1,6 +1,6 @@
-package com.scpa.db.repository;
+package com.techprimers.db.repository;
 
-import com.scpa.db.model.Containers;
+import com.techprimers.db.model.Containers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
