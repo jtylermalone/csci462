@@ -29,10 +29,6 @@
       $(document).ready( function () {
        $('#container_table').DataTable();
 
-       $('#container_table tfoot th').each ( function () {
-         var title = $(this).text();
-         $(this).html( '<input type="text" id = "search_ship_num" placeholder="Search '+title+'"/>' );
-       });
 
        var table = $('#container_table').DataTable();
 
@@ -128,15 +124,6 @@
             <td th:text="${container.driverShiftNumber}" />
         </tr>
       </tbody>
-      <tfoot>
-        <tr>
-            <th>Crane Number</th>
-            <th>Ship Number</th>
-            <th>Badge Number</th>
-            <th>Transmitted Datetime</th>
-            <th>Driver Shift Number</th>
-        </tr>
-      </tfoot>
     </table>
   </body>
 </html>
