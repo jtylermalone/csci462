@@ -20,7 +20,9 @@
     }
     </style>
     <script type="text/javascript" class="init">
-           
+      $(document).ready( function () {
+        $('#container_table').DataTable();
+      });
      
         $(document).on('submit', '#retrieve_form', function(e)  {
           e.preventDefault();
@@ -38,7 +40,9 @@
             type: "POST",
             success: function (response) {
               $("#container_table").html(response);
-
+              $('#container_table').DataTable({ 
+                      "destroy": true, //use for reinitialize datatable
+                   });
             }
           })
             .done(function () {
@@ -65,8 +69,11 @@
             data: { 'current_ship_number' : current_ship_number, 'current_badge_number': current_badge_number, 'new_ship_number': new_ship_number, 'new_badge_number': new_badge_number, 'crane_number': crane_number, 'begin_date' : begin_date, 'end_date' : end_date},
             type: "POST",
             success: function(response) {
-              alert("Number of updated entries: " + response[1]);
               $("#container_table").html(response[0]);
+              alert("Number of updated entries: " + response[1]);
+              $('#container_table').DataTable({ 
+                      "destroy": true, //use for reinitialize datatable
+                   });
             }
           })
             .done(function () {
