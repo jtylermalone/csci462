@@ -10,8 +10,9 @@
     <title>webapp</title>
     <style>
     form {
-      width:90%;
+      width:95%;
       text-align:right;
+      margin-top:10px;
     }
     table, th, td {
       border: 1px solid black;
@@ -19,62 +20,68 @@
     }
     </style>
     <script type="text/javascript" class="init">
-      $('#container_table').DataTable( {
-        "lengthMenu": [ 10, 25, 50, 75, 100 ]
-      });
-
-      
-      
-            
-      $(document).ready( function () {
-       $('#container_table').DataTable();
-
-
-       var table = $('#container_table').DataTable();
-
-       table.columns().every ( function () {
-         var that = this;
-
-         $( 'input', this.footer() ).on( 'keyup change clear', function () {
-           if ( that.search() !== this.value ) {
-             that
-                .search ( this.value )
-                .draw();
-           }
-         });
-       });
-      } );
-
-        $(document).on('submit', '#submit_form', function(e)  {
+           
+     
+        $(document).on('submit', '#retrieve_form', function(e)  {
           e.preventDefault();
-      
+        
+                  
           var current_ship_number = $('#cVesselNumber').val();
           var current_badge_number = $('#cBadgeNumber').val();
           var crane_number = $('#craneNumber').val();
-          var new_ship_number = $('#nVesselNumber').val();
+          var begin_date = $('#dateBeginning').val();
+          var end_date = $('#dateEnd').val();
+
+          $.ajax ({
+            url: '/containers/retrieve',
+            data: { 'current_ship_number' : current_ship_number, 'current_badge_number': current_badge_number, 'crane_number': crane_number, 'begin_date' : begin_date, 'end_date' : end_date},
+            type: "POST",
+            success: function (response) {
+              $("#container_table").html(response);
+
+            }
+          })
+            .done(function () {
+              //$( "#container_table" ).load( "show.html #container_table" );
+              //alert("done!");
+            });
+        });
+
+
+        $(document).on('submit', '#edit_form', function(e)  {
+          e.preventDefault();
+        
+
+          var current_ship_number = $('#cVesselNumber').val();
+          var current_badge_number = $('#cBadgeNumber').val();
           var new_badge_number = $('#nBadgeNumber').val();
+          var new_ship_number = $('#nVesselNumber').val();
+          var crane_number = $('#craneNumber').val();
           var begin_date = $('#dateBeginning').val();
           var end_date = $('#dateEnd').val();
 
           $.ajax ({
             url: '/containers/edit',
-            data: { 'current_ship_number' : current_ship_number, 'current_badge_number': current_badge_number, 'crane_number': crane_number, 'new_ship_number': new_ship_number, 'new_badge_number': new_badge_number, 'begin_date' : begin_date, 'end_date' : end_date},
-            type: "POST"
+            data: { 'current_ship_number' : current_ship_number, 'current_badge_number': current_badge_number, 'new_ship_number': new_ship_number, 'new_badge_number': new_badge_number, 'crane_number': crane_number, 'begin_date' : begin_date, 'end_date' : end_date},
+            type: "POST",
+            success: function(response) {
+              alert("Number of updated entries: " + response[1]);
+              $("#container_table").html(response[0]);
+            }
           })
             .done(function () {
-              $( "#container_table" ).load( "show.html #container_table" );
-              alert("Data saved.");
-              $('#container_table').DataTable();
+              //$( "#container_table" ).load( "show.html #container_table" );
+
             });
-        })
+        });
 
     </script>
   </head>
 
-  <body>
+  <body style="background-color:rgb(107, 196, 252)">
     <div class="row">
       <div class="col-md-4">
-        <form id="submit_form" action="/containers/edit" method="POST">
+        <form id="retrieve_form" action="/containers/retrieve" method="GET">
           <label for="cVesselNumber">Current Vessel Number</label>
           <input type="text" id="cVesselNumber" name="cVesselNumber"><br></br></input>
  
@@ -86,26 +93,32 @@
 
           <label for="dates">Date</label>
 
-          <label for="dateBeginning">Beginning</label>
-          <input type="text" id="dateBeginning" name="dateBeginning"><br></br></input>
+            <label for="dateBeginning">Beginning</label>
+            <input type="text" id="dateBeginning" name="dateBeginning"><br></br></input>
 
-          <label for="dateEnd">End</label>
-          <input type="text" id="dateEnd" name="dateEnd"><br></br></input>
+            <label for="dateEnd">End</label>
+            <input type="text" id="dateEnd" name="dateEnd"><br></br></input>
 
+          <input type="Submit" value="Show Current Records"><br></br></input>
+          <input type="Reset" value="Reset" id="reset"></input>
+        </form>
+      </div>
+
+      <div class="col-md-4">
+        <form id="edit_form" action="/containers/edit" method="POST">
           <label for="nVesselNumber">New Vessel Number</label>
           <input type="text" id="nVesselNumber" name="nVesselNumber"><br></br></input>
  
           <label for="nBadgeNumber">New Badge Number</label>
           <input type="text" id="nBadgeNumber" name="nBadgeNumber"><br></br></input>
 
-          <input type="Submit" value="Test Current Records"><br></br></input>
-          <input type="Reset" value="Reset"></input>
+          <input type="Submit" value="Update Records"></input>
         </form>
       </div>
     </div>
     
 
-    <table id="container_table" style="width:100%">
+    <table id="container_table">
       <thead>
         <tr>
             <th>Crane Number</th>
@@ -116,13 +129,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr th:each="container: ${containers}">
-            <td th:text="${container.craneNumber}" />
-            <td th:text="${container.shipNumber}" />
-            <td th:text="${container.badgeNumber}" />
-            <td th:text="${container.transmittedDatetime}" />
-            <td th:text="${container.driverShiftNumber}" />
-        </tr>
+        <div id="retrieved" th:if="${containers != null}">
+          <tr th:each="container: ${containers}">
+              <td th:text="${container.craneNumber}" />
+              <td th:text="${container.shipNumber}" />
+              <td th:text="${container.badgeNumber}" />
+              <td th:text="${container.transmittedDatetime}" />
+              <td th:text="${container.driverShiftNumber}" />
+          </tr>
+        </div>
       </tbody>
     </table>
   </body>
