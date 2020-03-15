@@ -18,6 +18,23 @@
       border: 1px solid black;
       border-collapse: collapse;
     }
+    .button {
+      background-color: lightgrey;
+      border: black;
+      border-width: 8px;
+      border-radius: 8px;
+      border-color: black;
+      color: black;
+      padding: 7px 11px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+    }
+    input {
+      border-radius: 4px;
+      padding-left: 8px;
+    }
     </style>
     <script type="text/javascript" class="init">
       $(document).ready( function () {
@@ -106,8 +123,8 @@
             <label for="dateEnd">End</label>
             <input type="text" id="dateEnd" name="dateEnd"><br></br></input>
 
-          <input type="Submit" value="Show Current Records"><br></br></input>
-          <input type="Reset" value="Reset" id="reset"></input>
+          <input type="Submit"  class="button" value="Show Current Records"><br></br></input>
+          <input type="Reset" class="button" value="Reset" id="reset"></input>
         </form>
       </div>
 
@@ -119,13 +136,13 @@
           <label for="nBadgeNumber">New Badge Number</label>
           <input type="text" id="nBadgeNumber" name="nBadgeNumber"><br></br></input>
 
-          <input type="Submit" value="Update Records"></input>
+          <input type="Submit" class="button" value="Update Records"></input>
         </form>
       </div>
     </div>
     
 
-    <table id="container_table">
+    <table id="container_table" class="dataTable" width="84%">
       <thead>
         <tr>
             <th>Crane Number</th>
