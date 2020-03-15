@@ -1,3 +1,31 @@
+form {
+  width:95%;
+  text-align:right;
+  margin-top:10px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.button {
+  background-color: lightgrey;
+  border: black;
+  border-width: 8px;
+  border-radius: 8px;
+  border-color: black;
+  color: black;
+  padding: 7px 11px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+input {
+  border-radius: 4px;
+  padding-left: 8px;
+}
+
+
 table.dataTable {
     width: 100%;
     margin: 0 auto;
