@@ -66,9 +66,10 @@ public class ContainersController {
     public String retrieve(HttpServletRequest req) throws ParseException {
         System.out.println("---------- IN RETRIEVE ----------");
         String begin_date = req.getParameter("begin_date");
-        Date from_date = new SimpleDateFormat("yyyy/MM/dd").parse(begin_date);
+        System.out.println("!!!!!!!! begin_date: " + begin_date);
+        Date from_date = new SimpleDateFormat("yyyy-MM-dd").parse(begin_date);
         String end_date = req.getParameter("end_date");
-        Date to_date = new SimpleDateFormat("yyyy/MM/dd").parse(end_date);
+        Date to_date = new SimpleDateFormat("yyyy-MM-dd").parse(end_date);
         System.out.println("from_date: " + from_date);
         System.out.println("to_date: " + to_date);
         Integer crane_number = Integer.parseInt(req.getParameter("crane_number"));
@@ -113,9 +114,9 @@ public class ContainersController {
         List<Containers> containersList = containersRepository.findByTransmittedDatetimeBetween(from_date, to_date, old_badge_number, old_ship_number, crane_number);
         */
         String begin_date = req.getParameter("begin_date");
-        Date from_date = new SimpleDateFormat("yyyy/MM/dd").parse(begin_date);
+        Date from_date = new SimpleDateFormat("yyyy-MM-dd").parse(begin_date);
         String end_date = req.getParameter("end_date");
-        Date to_date = new SimpleDateFormat("yyyy/MM/dd").parse(end_date);
+        Date to_date = new SimpleDateFormat("yyyy-MM-dd").parse(end_date);
         System.out.println("from_date: " + from_date);
         System.out.println("to_date: " + to_date);
         Integer crane_number = Integer.parseInt(req.getParameter("crane_number"));
