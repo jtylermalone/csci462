@@ -1,9 +1,9 @@
-package com.techprimers.db.resources;
+package com.scpa.db.resources;
 
-import com.techprimers.db.model.Containers;
-import com.techprimers.db.repository.ContainersRepository;
-import com.techprimers.db.model.Employees;
-import com.techprimers.db.repository.EmployeesRepository;
+import com.scpa.db.model.Containers;
+import com.scpa.db.repository.ContainersRepository;
+import com.scpa.db.model.Employees;
+import com.scpa.db.repository.EmployeesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

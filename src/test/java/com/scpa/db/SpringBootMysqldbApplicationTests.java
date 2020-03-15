@@ -1,4 +1,4 @@
-package com.techprimers.db;
+package com.scpa.db;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

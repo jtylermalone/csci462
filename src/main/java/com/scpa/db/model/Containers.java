@@ -1,4 +1,4 @@
-package com.techprimers.db.model;
+package com.scpa.db.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
