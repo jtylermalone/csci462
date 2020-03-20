@@ -13,9 +13,8 @@ public class Employees {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
-    private Integer id;
-
+    @Column(name = "empnum")
+    private String empnum;
     @Column(name = "name")
     private String name;
     @Column(name = "dept")
@@ -31,18 +30,18 @@ public class Employees {
         this.dept_name = "-1";
         this.job_title = "-1";
     }
-    public Employees(String name,
+    public Employees(String empnum, String name,
                         String dept, String dept_name, String job_title) {
 
-
+        this.empnum = empnum;
         this.name = name;
         this.dept = dept;
         this.dept_name = dept_name;
         this.job_title = job_title;
     }
 
-    public Integer getId() {
-        return id;
+    public String getEmpnum() {
+        return empnum;
     }
 
     public String getName() {
@@ -63,7 +62,7 @@ public class Employees {
 
     public String toString() {
         return String.format(
-            "Container[id=%s, name=%s, dept=%s, dept_name=%s, job_title=%s", id, name, dept, dept_name, job_title
+            "Container[empnum=%s, name=%s, dept=%s, dept_name=%s, job_title=%s", empnum, name, dept, dept_name, job_title
         );
     }
 }

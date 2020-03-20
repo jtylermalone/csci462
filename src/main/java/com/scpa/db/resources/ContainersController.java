@@ -4,12 +4,15 @@ import com.scpa.db.model.Containers;
 import com.scpa.db.repository.ContainersRepository;
 import com.scpa.db.model.Employees;
 import com.scpa.db.repository.EmployeesRepository;
+import com.scpa.db.model.Vessel;
+import com.scpa.db.repository.VesselRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 //import sun.util.calendar.BaseCalendar.Date;
 
@@ -31,6 +34,9 @@ public class ContainersController {
 
     @Autowired
     EmployeesRepository employeesRepository;
+
+    @Autowired
+    VesselRepository vesselRepository;
 
     @GetMapping("/")
     public ModelAndView index(Model model) {
@@ -59,6 +65,27 @@ public class ContainersController {
         mav.addObject("employees", employees);
         mav.setViewName("productivity");
         return mav;
+    }
+
+    @PostMapping("/badge")
+    @ResponseBody
+    public String badge(HttpServletRequest req) throws ParseException {
+        System.out.println("---------- IN GETBADGENUMBER ----------");
+        String badge_number = employeesRepository.findBadgeNumber(req.getParameter("name"));
+        System.out.println("badge_number: " + badge_number);
+        return badge_number;
+    }
+
+    @PostMapping("/vessel")
+    @ResponseBody
+    public List<String> vessel(HttpServletRequest req) throws ParseException {
+        System.out.println("---------- IN VESSEL ----------");
+        System.out.println(req.getParameter("vessel_code"));
+        Vessel vessel = vesselRepository.findByVesselCode(req.getParameter("vessel_code"));
+        System.out.println(vessel);
+        List<String> return_list = Arrays.asList(vessel.getVesselName(), vessel.getLineName(), vessel.getLineCode()); 
+        System.out.println("________ " + vessel.getLineName());
+        return return_list;
     }
     
     @PostMapping("/retrieve")

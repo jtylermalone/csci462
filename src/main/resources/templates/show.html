@@ -7,7 +7,7 @@
     <!--link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css"></link-->
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <title>webapp</title>
+    <title>Vessel Corrections</title>
     <style>
 
     /*
@@ -374,9 +374,14 @@ table.dataTable td {
     .pull-left{
       float: left !important;
     }
-    form {
+    #retrieve_form {
       width:95%;
       text-align:right;
+      margin-top:10px;
+    }
+    #edit_form {
+      width:95%;
+      text-align:left;
       margin-top:10px;
     }
     .button {
@@ -481,8 +486,10 @@ table.dataTable td {
   </head>
 
   <body style="background-color:rgb(107, 196, 252)">
+    <img src="src\main\resources\templates\scpa.jpg" alt="SCPA logo"></img><br></br>
+    <h1 style="text-align:center;">Vessel Corrections</h1>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-6">
         <form id="retrieve_form" action="/containers/retrieve" method="GET">
           <label for="cVesselNumber">Current Vessel Number</label>
           <input type="text" id="cVesselNumber" name="cVesselNumber"><br></br></input>
@@ -506,7 +513,7 @@ table.dataTable td {
         </form>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-6">
         <form id="edit_form" action="/containers/edit" method="POST">
           <label for="nVesselNumber">New Vessel Number</label>
           <input type="text" id="nVesselNumber" name="nVesselNumber"><br></br></input>
