@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script type="text/javascript" class="init">
+            function fill_badge_number () {
+                var name = document.getElementById("full_name").value;
+                $.ajax ({
+                    url: '/containers/badge',
+                    data: { 'name' : name },
+                    type: "POST",
+                    success: function(response) {
+                        document.getElementById("badge_number").value = response;
+                    }
+                    
+                });
+            }
+
+            function fill_vessel_fields () {
+                var vessel_code = document.getElementById("vessel_code").value;
+                $.ajax ({
+                    url: '/containers/vessel',
+                    data: { 'vessel_code' : vessel_code },
+                    type: "POST",
+                    success: function(response) {
+                        //alert("name: " + response[0] + "\nline: " + response[1] + "\ncode: " + response[2]);
+                        document.getElementById("vessel_name").value = response[0];
+                        document.getElementById("steamship_line").value = response[1];
+                        document.getElementById("line_code").value = response[2];
+                    }
+                });
+            }
+            
+        </script>
+    </head>
+  
+    <form action="containers/productivity" method="POST">
+        
+        <label for="date">Date:</label><br></br>
+        <input type="datetime" id="date" name="date"></input><br></br><br></br>
+
+        <label for="vessel_code">Vessel Code:</label><br></br>
+        <input type="text" id="vessel_code" name="vessel_code"  onchange="fill_vessel_fields()"></input><br></br>
+
+        <label for="vessel_name">Vessel Name:</label><br></br>
+        <input type="text" id="vessel_name" name="vessel_name"></input><br></br>
+
+        <label for="steamship_line">Steamship Line:</label><br></br>
+        <input type="text" id="steamship_line" name="steamship_line"></input><br></br>
+
+        <label for="line_code">Line Code:</label><br></br>
+        <input type="text" id="line_code" name="line_code"></input><br></br>
+
+        <label for="full_name">Full Name:</label><br></br>
+        <select id="full_name" name="full_name" onchange="fill_badge_number()">
+            <option></option>
+            <option th:each="employee : ${employees}"
+                    th:value="${employee.name}"
+                    th:text="${employee.name}">
+                 </option>
+         </select><br></br>
+
+        <label for="badge_number">Badge Number:</label><br></br>
+        <input type="number" id="badge_number" name="badge_number"></input>
+        
+    </form>
+</html>

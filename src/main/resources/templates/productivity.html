@@ -10,48 +10,112 @@
                     data: { 'name' : name },
                     type: "POST",
                     success: function(response) {
-                        document.getElementById("badge_number").value = response;
+                        document.getElementById("badgeNumber").value = response;
                     }
                     
                 });
             }
 
+
             function fill_vessel_fields () {
-                var vessel_code = document.getElementById("vessel_code").value;
+                var vessel_code = document.getElementById("vCode").value;
                 $.ajax ({
                     url: '/containers/vessel',
                     data: { 'vessel_code' : vessel_code },
                     type: "POST",
                     success: function(response) {
                         //alert("name: " + response[0] + "\nline: " + response[1] + "\ncode: " + response[2]);
-                        document.getElementById("vessel_name").value = response[0];
-                        document.getElementById("steamship_line").value = response[1];
-                        document.getElementById("line_code").value = response[2];
+                        document.getElementById("vName").value = response[0];
+                        document.getElementById("shipLine").value = response[1];
+                        document.getElementById("lCode").value = response[2];
                     }
                 });
             }
-            
+
+            function add_record() {
+                var vessel_code = document.getElementById("vCode").value;
+                var badge_number = document.getElementById("badgeNumber").value;
+                var driver_shift_number = document.getElementById("driverShiftNumber").value;
+                var crane_number = document.getElementById("crane").value;
+                var start_date = document.getElementById("startDate").value;
+                var end_date = document.getElementById("endDate").value;
+                var cont_moves = document.getElementById("numMoves").value;
+                var start_time = document.getElementById("startTime").value;
+                var end_time = document.getElementById("endTime").value;
+                //var start = new Date(start_date + ' ' + start_time);
+                //var end = new Date(end_date + ' ' + end_time);
+                //var hours_unrounded = (end - start) / 1000 / 60 / 60;
+                //var hours = hours_unrounded.toFixed(2);
+                //var production_hours_unrounded = cont_moves / hours;
+                //var production_hours = production_hours_unrounded.toFixed(2);
+                //document.getElementById("productivity").value = production_hours;
+                //alert("vessel code: " + vessel_code + "\nbadge number: " + badge_number + "\ndsn: " + 
+                       // driver_shift_number + "\ncrane num: " + crane_number + "\nstart date: " + start_date
+                       // + "\nend date: " + end_date + "\nmoves: " + moves);
+                //alert(vessel_code + "\n" + badge_number + "\n" + driver_shift_number + "\n" + crane_number
+                //+ "\n" + start_date + "\n" + end_date + "\n" + cont_moves + "\n" + start_time + "\n" + end_time
+                //+ "\n" + start + "\n" + end + "\n" + hours + "\n" + production_hours);
+
+            }
+        
+            function fill_productivity() {
+                alert("in function");
+                var start_date = document.getElementById("startDate").value;
+                var end_date = document.getElementById("endDate").value
+                var start_time = document.getElementById("startTime").value;
+                var end_time = document.getElementById("endTime").value;
+                var moves = document.getElementById("numMoves").value;
+                var start = new Date(start_date + ' ' + start_time);
+                var end = new Date(end_date + ' ' + end_time);
+                alert("here");
+                var hours_unrounded = (end - start) / 1000 / 60 / 60;
+                var hours = hours_unrounded.toFixed(2);
+                var production_hours_unrounded = cont_moves / hours;
+                var production_hours = production_hours_unrounded.toFixed(2);
+                alert(production_hours);
+                document.getElementById("productivity").value = production_hours;
+            }
+        
         </script>
     </head>
-  
-    <form action="containers/productivity" method="POST">
+
+
+<body>
+    <div class="row" style="margin:10px;">
+      <div class="col-md-4" style="text-align:right;">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date"><br></br><br></br></input>
+ 
+        <label for="vCode">Vessel Code</label>
+        <input type="text" id="vCode" name="vCode" onchange="fill_vessel_fields()"><br></br></input>
+        <label for="lCode">Line Code</label>
+        <input type="text" id="lCode" name="lCode"><br></br><br></br></input>
+
+        <label for="badgeNumber">Operator Badge #</label>
+        <input type="text" id="badgeNumber" name="badgeNumber"><br></br><br></br></input>
+
+        <label for="driverShiftNumber">Driver Shift Number</label>
+        <input type="text" id="driverShiftNumber" name="badgeNumber"><br></br><br></br></input>
+
+        <label for="crane">Crane</label>
+        <input type="text" id="crane" name="crane"><br></br><br></br></input>
         
-        <label for="date">Date:</label><br></br>
-        <input type="datetime" id="date" name="date"></input><br></br><br></br>
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="startDate"><br></br></input>
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" name="endDate"><br></br></input>
+      <!--/div-->
 
-        <label for="vessel_code">Vessel Code:</label><br></br>
-        <input type="text" id="vessel_code" name="vessel_code"  onchange="fill_vessel_fields()"></input><br></br>
+      <!--div class="col-md-4" style="text-align:right;"-->
+        <label for="spaTerminal">SPA Terminal</label>
+        <input type="text" id="spaTerminal" name="spaTerminal"><br></br><br></br></input>
 
-        <label for="vessel_name">Vessel Name:</label><br></br>
-        <input type="text" id="vessel_name" name="vessel_name"></input><br></br>
+        <label for="vName">Vessel Name</label>
+        <input type="text" id="vName" name="vName"><br></br></input>
+        <label for="shipLine">Steamship Line</label>
+        <input type="text" id="shipLine" name="shipLine"><br></br><br></br></input>
 
-        <label for="steamship_line">Steamship Line:</label><br></br>
-        <input type="text" id="steamship_line" name="steamship_line"></input><br></br>
-
-        <label for="line_code">Line Code:</label><br></br>
-        <input type="text" id="line_code" name="line_code"></input><br></br>
-
-        <label for="full_name">Full Name:</label><br></br>
+        <label for="full_name">Full Name:</label>
         <select id="full_name" name="full_name" onchange="fill_badge_number()">
             <option></option>
             <option th:each="employee : ${employees}"
@@ -60,8 +124,45 @@
                  </option>
          </select><br></br>
 
-        <label for="badge_number">Badge Number:</label><br></br>
-        <input type="number" id="badge_number" name="badge_number"></input>
+        <label for="eNumber">Equipment #</label>
+        <input type="text" id="eNumber" name="eNumber"><br></br><br></br></input>
         
-    </form>
-</html>
+        <input type="button" id="addRecord" name="addRecord" style="padding:16px" value="Add Record" onclick="add_record()"></input>
+        <input type="button" id="updateVessel" name="updateVessel" style="padding:16px" value="Update Vessel Lookup Info"></input>
+        <br></br>
+      </div>
+
+      <!--div class="col-md-4" style="text-align:left;"-->
+        <br></br><br></br><br></br>
+        <label for="vClass">Vessel Class</label>
+        <input type="text" id="vClass" name="vClass" size="5"></input>
+      </div>
+    <!--/div-->
+
+    <!--Productivity Table-->
+    <div class="row" style="border: 4px solid black; margin:10px;">
+      <div class="col-md-3" style="text-align:right; margin-top:10px; margin-bottom:10px;">
+        <label for="startTime">Start Time</label>
+        <input type="time" id="startTime" name="startTime"><br></br></input>
+        <label for="endTime">End Time</label>
+        <input type="time" id="endTime" name="endTime"><br></br></input>
+      </div>
+
+      <div class="col-md-3" style="text-align: right; margin-top:10px; margin-bottom:10px;">
+        <label for="numMoves">Moves</label>
+        <input type="text" id="numMoves" name="numMoves" size="10" onchange="fill_productivity()"><br></br></input>
+        <label for="productivity">Productivity</label>
+        <input type="text" id="productivity" name="productivity" size="10"><br></br></input>
+      </div>
+
+      <div class="col-md-6" style="text-align: left; margin-top:10px;">
+        <label for="addComment">+Add Comment</label>
+      </div>
+
+      <div class="col-md-4" style="text-align: left;">
+        <label for="addAnother">+Add Another</label>
+      </div>
+    </div>
+
+  </body>
+  </html>
