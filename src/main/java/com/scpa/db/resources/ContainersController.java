@@ -67,6 +67,7 @@ public class ContainersController {
         return mav;
     }
 
+    
     @PostMapping("/badge")
     @ResponseBody
     public String badge(HttpServletRequest req) throws ParseException {
