@@ -3,6 +3,7 @@
     <head>
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script type="text/javascript" class="init">
+            //<![CDATA[ 
             function fill_badge_number () {
                 var name = document.getElementById("full_name").value;
                 $.ajax ({
@@ -58,7 +59,6 @@
             }
         
             function fill_productivity() {
-                alert("in function");
                 var start_date = document.getElementById("startDate").value;
                 var end_date = document.getElementById("endDate").value
                 var start_time = document.getElementById("startTime" + counter).value;
@@ -79,21 +79,43 @@
                 
                 //
                 var dest_div = document.getElementById("add_fields_here");
-                var new_fields = '<br></br><label for="startTime1">Start Time ' + counter + 
+                var current_div_content = dest_div.innerHTML;
+                //alert(current_div_content);
+                var new_fields = '<div><br></br><label for="startTime1">Start Time ' + counter + 
                     '</label> <input type="time" id="startTime' + counter + '" name="startTime' + counter + 
                     '"><br></br></input>' + '<label for="endTime">End Time ' + counter +
                     '</label> <input type="time" id="endTime' + counter + '" name="endTime' + counter + 
                     '"><br></br></input>' + '<label for="numMoves' + counter + '">Moves ' + counter + 
                     '</label> <input type="text" id="numMoves' + counter + '" name="numMoves' + counter + '" size="10" onchange="fill_productivity()"><br></br></input>' + 
                     '<label for="productivity' + counter + '">Productivity ' + counter + 
-                    '</label> <input type="text" id="productivity' + counter + '" name="productivity' + counter + '" size="10"><br></br></input>';
-                dest_div.innerHTML += new_fields;
-                alert("here");
-                //document.getElementById("add_fields_here").appendChild(newdiv);
+                    '</label> <input type="text" id="productivity' + counter + '" name="productivity' + counter + '" size="10"><br></br></input></div>';
+                //dest_div.innerHTML = (current_div_content + new_fields);
+                dest_div.appendChild(new_fields);
                 //counter++;
             }
+
+            function productivity() {
+                var start_date = document.getElementById("startDate").value;
+                var end_date = document.getElementById("endDate").value;
+                var badge_number = document.getElementById("badgeNumber").value;
+                var driver_shift_number = document.getElementById("driverShiftNumber").value;
+                var ship_number = document.getElementById("vCode").value;
+                var crane_number = document.getElementById("crane").value;
+                var total_driver_shifts = document.getElementById("total_shifts").value;
+                var moves = document.getElementById("numMoves1").value;
+              
+                $.ajax ({
+                    url: '/containers/submit_productivity',
+                    data: { 'start_date':start_date, 'end_date':end_date, 'badge_number':badge_number, 'driver_shift_number':driver_shift_number, 'ship_number':ship_number, 'crane_number':crane_number, 'total_driver_shifts':total_driver_shifts, 'moves':moves },
+                    type: "POST",
+                    success: function(response) {
+                        
+                    }
+                });
+
+            }
             
-        
+        //]]>
         </script>
     </head>
 
@@ -122,6 +144,8 @@
         <input type="date" id="startDate" name="startDate"><br></br></input>
         <label for="endDate">End Date</label>
         <input type="date" id="endDate" name="endDate"><br></br></input>
+        <label for="total_shifts">Total Driver Shifts</label>
+        <input type="number" id="total_shifts" name="total_shifts"><br></br></input>
       <!--/div-->
 
       <!--div class="col-md-4" style="text-align:right;"-->
@@ -145,7 +169,7 @@
         <label for="eNumber">Equipment #</label>
         <input type="text" id="eNumber" name="eNumber"><br></br><br></br></input>
         
-        <input type="button" id="addRecord" name="addRecord" style="padding:16px" value="Add Record" onclick="add_record()"></input>
+        <input type="button" id="addRecord" name="addRecord" style="padding:16px" value="Add Record" onclick="productivity()"></input>
         <input type="button" id="updateVessel" name="updateVessel" style="padding:16px" value="Update Vessel Lookup Info"></input>
         <br></br>
       </div>

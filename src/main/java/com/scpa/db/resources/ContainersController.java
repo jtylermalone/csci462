@@ -6,6 +6,8 @@ import com.scpa.db.model.Employees;
 import com.scpa.db.repository.EmployeesRepository;
 import com.scpa.db.model.Vessel;
 import com.scpa.db.repository.VesselRepository;
+import com.scpa.db.model.Productivity;
+import com.scpa.db.repository.ProductivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 //import sun.util.calendar.BaseCalendar.Date;
 
@@ -38,6 +41,9 @@ public class ContainersController {
     @Autowired
     VesselRepository vesselRepository;
 
+    @Autowired
+    ProductivityRepository productivityRepository;
+
     @GetMapping("/")
     public ModelAndView index(Model model) {
         List<Containers> containers = containersRepository.findAll();
@@ -58,6 +64,71 @@ public class ContainersController {
        // return new ModelAndView("show", "users", model);
     }
 
+    @ResponseBody
+    @PostMapping("/submit_productivity")    
+    public String submit_productivity(HttpServletRequest req) throws ParseException {
+        System.out.println("--------In SUBMIT_PRODUCTIVITY--------");
+        Productivity prod_object = new Productivity();
+        String begin_date = req.getParameter("start_date");
+        System.out.println("********* BEGIN DATE: " + begin_date);
+        Date start_date = new SimpleDateFormat("yyyy-MM-dd").parse(begin_date);
+        prod_object.setMinOfTransmitted_Datetime(start_date);
+        String end_date_string = req.getParameter("end_date");
+        Date end_date = new SimpleDateFormat("yyyy-MM-dd").parse(end_date_string);
+        System.out.println("end date: " + end_date);
+        prod_object.setMaxOfTransmittedDatetime(end_date);
+        String badge_number = req.getParameter("badge_number");
+        System.out.println("badge number: " + badge_number);
+        prod_object.setBadgeNumber(badge_number);
+        String driver_shift_number = req.getParameter("driver_shift_number");
+        System.out.println("driver shift number: " + driver_shift_number);
+        prod_object.setDriverShiftNumber(driver_shift_number);
+        String ship_number = req.getParameter("ship_number");
+        System.out.println("ship number: " + ship_number);
+        prod_object.setShipNumber(ship_number);
+        prod_object.setHatchcoverMoves(0);
+        String crane_number = req.getParameter("crane_number");
+        System.out.println("crane number: " + crane_number);
+        prod_object.setCraneNumber(crane_number);
+        String total_driver_shifts_string = req.getParameter("total_driver_shifts");
+        Integer total_driver_shifts = Integer.parseInt(total_driver_shifts_string);
+        System.out.println("total driver shifts: " + total_driver_shifts);
+        prod_object.setTotalDriverShifts(total_driver_shifts);
+        String moves_string = req.getParameter("moves");
+        Integer moves = Integer.parseInt(moves_string);
+        System.out.println("moves: " + moves);
+        prod_object.setContMoves(moves);
+        Integer calendar_year = end_date.getYear() + 1900;
+        System.out.println("calendar year: " + calendar_year);
+        prod_object.setCalendarYear(calendar_year);
+        Integer calendar_month = end_date.getMonth() + 1;
+        System.out.println("calendar month: " + (calendar_month));
+        prod_object.setCyMonthSort(calendar_month);
+        Integer fiscal_month;
+        if (calendar_month == 6) {
+            fiscal_month = 12;
+        }
+        else if (calendar_month >= 7) {
+            fiscal_month = ((calendar_month - 6) % 12);
+        }
+        else {
+            fiscal_month = (((calendar_month - 6) % 12) + 12);
+        }
+        System.out.println("fiscal month: " + fiscal_month);
+        prod_object.setFyMonthSort(fiscal_month);
+        Integer fiscal_year;
+        if (calendar_month >= 7) {
+            fiscal_year = calendar_year + 1;
+        }
+        else {
+            fiscal_year = calendar_year;
+        }
+        prod_object.setFiscalYear(fiscal_year);
+        System.out.println("fiscal year: " + fiscal_year);
+        productivityRepository.save(prod_object);
+        return "test";
+    }
+
     @GetMapping("/productivity")
     public ModelAndView productivity(Model model) {
         List<Employees> employees = employeesRepository.findEmployees();
@@ -67,7 +138,7 @@ public class ContainersController {
         return mav;
     }
 
-    
+
     @PostMapping("/badge")
     @ResponseBody
     public String badge(HttpServletRequest req) throws ParseException {
