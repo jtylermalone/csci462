@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"></link>
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script type="text/javascript" class="init">
-            //<![CDATA[ 
+            /*<![CDATA[ */
             function fill_badge_number () {
                 var name = document.getElementById("full_name").value;
                 $.ajax ({
@@ -16,7 +17,27 @@
                     
                 });
             }
-            var counter = 1;
+
+            function clear_fields () {
+              document.getElementById("badgeNumber").reset();
+              /*
+              document.getElementById("lCode").reset();
+              document.getElementById("badgeNumber").reset();
+              document.getElementById("crane").reset();
+              document.getElementById("startDate").reset();
+              document.getElementById("endDate").reset();
+              document.getElementById("driverShiftNumber").reset();
+              document.getElementById("total_shifts").reset();
+              document.getElementById("vName").reset();
+              document.getElementById("shipLine").reset();
+              document.getElementById("full_name").reset();
+              document.getElementById("startTime").reset();
+              document.getElementById("endTime").reset();
+              document.getElementById("numMoves").reset();
+              document.getElementById("productivity").reset();*/
+            }
+           
+            
             function fill_vessel_fields () {
                 var vessel_code = document.getElementById("vCode").value;
                 $.ajax ({
@@ -42,6 +63,7 @@
                 var cont_moves = document.getElementById("numMoves").value;
                 var start_time = document.getElementById("startTime").value;
                 var end_time = document.getElementById("endTime").value;
+                //var end_time = document.getElementById("endTime").value;
                 //var start = new Date(start_date + ' ' + start_time);
                 //var end = new Date(end_date + ' ' + end_time);
                 //var hours_unrounded = (end - start) / 1000 / 60 / 60;
@@ -61,23 +83,20 @@
             function fill_productivity() {
                 var start_date = document.getElementById("startDate").value;
                 var end_date = document.getElementById("endDate").value
-                var start_time = document.getElementById("startTime" + counter).value;
-                var end_time = document.getElementById("endTime" + counter).value;
-                var moves = document.getElementById("numMoves" + counter).value;
+                var start_time = document.getElementById("startTime").value;
+                var end_time = document.getElementById("endTime").value;
+                var moves = document.getElementById("numMoves").value;
                 var start = new Date(start_date + ' ' + start_time);
                 var end = new Date(end_date + ' ' + end_time);
                 var hours_unrounded = (end - start) / 1000 / 60 / 60;
                 var hours = hours_unrounded.toFixed(2);
                 var production_hours_unrounded = moves / hours;
                 var production_hours = production_hours_unrounded.toFixed(2);
-                document.getElementById("productivity" + counter).value = production_hours;
+                document.getElementById("productivity").value = production_hours;
             }
-            var counter = 1;
+
             function add_fields() {
-                // row, col-md-3
-                counter++
-                
-                //
+
                 var dest_div = document.getElementById("add_fields_here");
                 var current_div_content = dest_div.innerHTML;
                 //alert(current_div_content);
@@ -93,118 +112,120 @@
                 dest_div.appendChild(new_fields);
                 //counter++;
             }
-
+            
             function productivity() {
+
+
+
+
+              
+                //alert("ship number: " + document.getElementById("vCode").value);
                 var start_date = document.getElementById("startDate").value;
+                var ship_number = document.getElementById("vCode").value;
                 var end_date = document.getElementById("endDate").value;
                 var badge_number = document.getElementById("badgeNumber").value;
                 var driver_shift_number = document.getElementById("driverShiftNumber").value;
-                var ship_number = document.getElementById("vCode").value;
                 var crane_number = document.getElementById("crane").value;
                 var total_driver_shifts = document.getElementById("total_shifts").value;
-                var moves = document.getElementById("numMoves1").value;
+                var moves = document.getElementById("numMoves").value;
               
                 $.ajax ({
                     url: '/containers/submit_productivity',
                     data: { 'start_date':start_date, 'end_date':end_date, 'badge_number':badge_number, 'driver_shift_number':driver_shift_number, 'ship_number':ship_number, 'crane_number':crane_number, 'total_driver_shifts':total_driver_shifts, 'moves':moves },
                     type: "POST",
                     success: function(response) {
-                        
+                        alert("Record added successfully!");
                     }
                 });
 
             }
             
-        //]]>
+        /*]]>*/
         </script>
-    </head>
+  <style>
+    input {
+      border-radius: 4px;
+      padding-left: 5px;
+    }
+      label {
+        color: navy;
+        font-weight: bold;
+      }
+  </style>
+</head>
 
+<body style="background-color:#E6E6E6">
+  <h1 style="text-align:center;">Productivity</h1>
+  <div class="row" style="margin:8px;">
+    <div class="col-md-4" style="text-align:right;">
+      <label for="spaTerminal">SPA Terminal</label>
+      <input type="text" id="spaTerminal" name="spaTerminal"><br></br><br></br></input>
 
-<body>
-    <div class="row" style="margin:10px;">
-      <div class="col-md-4" style="text-align:right;">
-        <label for="date">Date</label>
-        <input type="date" id="date" name="date"><br></br><br></br></input>
- 
-        <label for="vCode">Vessel Code</label>
-        <input type="text" id="vCode" name="vCode" onchange="fill_vessel_fields()"><br></br></input>
-        <label for="lCode">Line Code</label>
-        <input type="text" id="lCode" name="lCode"><br></br><br></br></input>
+      <br></br><br></br>
+      <label for="vCode">Vessel Code</label>
+      <select id="vCode" name="vCode" onchange="fill_vessel_fields()">
+        <option></option>
+        <option th:each="vessel_code : ${vessel_codes}"
+                th:value="${vessel_code}"
+                th:text="${vessel_code}">
+              </option>
+            </select><br></br>
+      <label for="lCode">Line Code</label>
+      <input type="text" id="lCode" name="lCode"><br></br><br></br></input>
 
-        <label for="badgeNumber">Operator Badge #</label>
-        <input type="text" id="badgeNumber" name="badgeNumber"><br></br><br></br></input>
+      <label for="badgeNumber">Operator Badge #</label>
+      <input type="text" id="badgeNumber" name="badgeNumber"><br></br><br></br></input>
+      <label for="driverShiftNumber">Driver Shift Number</label>
+      <input type="text" id="driverShiftNumber" name="badgeNumber"><br></br><br></br></input>
+      <label for="total_shifts">Total Driver Shifts</label>
+      <input type="text" id="total_shifts" name="total_shifts"><br></br></input>
 
-        <label for="driverShiftNumber">Driver Shift Number</label>
-        <input type="text" id="driverShiftNumber" name="badgeNumber"><br></br><br></br></input>
-
-        <label for="crane">Crane</label>
-        <input type="text" id="crane" name="crane"><br></br><br></br></input>
-        
-        <label for="startDate">Start Date</label>
-        <input type="date" id="startDate" name="startDate"><br></br></input>
-        <label for="endDate">End Date</label>
-        <input type="date" id="endDate" name="endDate"><br></br></input>
-        <label for="total_shifts">Total Driver Shifts</label>
-        <input type="number" id="total_shifts" name="total_shifts"><br></br></input>
-      <!--/div-->
-
-      <!--div class="col-md-4" style="text-align:right;"-->
-        <label for="spaTerminal">SPA Terminal</label>
-        <input type="text" id="spaTerminal" name="spaTerminal"><br></br><br></br></input>
-
-        <label for="vName">Vessel Name</label>
-        <input type="text" id="vName" name="vName"><br></br></input>
-        <label for="shipLine">Steamship Line</label>
-        <input type="text" id="shipLine" name="shipLine"><br></br><br></br></input>
-
-        <label for="full_name">Full Name:</label>
-        <select id="full_name" name="full_name" onchange="fill_badge_number()">
-            <option></option>
-            <option th:each="employee : ${employees}"
-                    th:value="${employee.name}"
-                    th:text="${employee.name}">
-                 </option>
-         </select><br></br>
-
-        <label for="eNumber">Equipment #</label>
-        <input type="text" id="eNumber" name="eNumber"><br></br><br></br></input>
-        
-        <input type="button" id="addRecord" name="addRecord" style="padding:16px" value="Add Record" onclick="productivity()"></input>
-        <input type="button" id="updateVessel" name="updateVessel" style="padding:16px" value="Update Vessel Lookup Info"></input>
-        <br></br>
-      </div>
-
-      <!--div class="col-md-4" style="text-align:left;"-->
-        <br></br><br></br><br></br>
-        <label for="vClass">Vessel Class</label>
-        <input type="text" id="vClass" name="vClass" size="5"></input>
-      </div>
-    <!--/div-->
-
-    <!--Productivity Table-->
-    <div class="row" style="border: 4px solid black; margin:10px;">
-      <div class="col-md-3" id="add_fields_here" style="text-align:right; margin-top:10px; margin-bottom:10px;">
-        <label for="startTime1">Start Time 1</label>
-        <input type="time" id="startTime1" name="startTime1"><br></br></input>
-        <label for="endTime1">End Time 1</label>
-        <input type="time" id="endTime1" name="endTime1"><br></br></input>
-      <!--/div-->
-
-      <!--div class="col-md-3" style="text-align: right; margin-top:10px; margin-bottom:10px;"-->
-        <label for="numMoves1">Moves</label>
-        <input type="text" id="numMoves1" name="numMoves1" size="10" onchange="fill_productivity()"><br></br></input>
-        <label for="productivity1">Productivity</label>
-        <input type="text" id="productivity1" name="productivity1" size="10"><br></br></input>
-      </div>
-
-      <div class="col-md-6" style="text-align: left; margin-top:10px;">
-        <label for="addComment">+Add Comment</label>
-      </div>
-
-      <div class="col-md-4" style="text-align: left;">
-        <button id="add_field" value="Add Entry" onclick="add_fields()">Add Entry</button> 
-      </div>
+      <label for="crane">Crane</label>
+      <input type="text" id="crane" name="crane"><br></br><br></br></input>
     </div>
 
-  </body>
+    <div class="col-md-4" style="text-align:right;">
+      <label for="startDate">Start Date</label>
+      <input type="date" id="startDate" name="startDate"><br></br></input>
+      <label for="endDate">End Date</label>
+      <input type="date" id="endDate" name="endDate"><br></br><br></br></input>
+
+      <label for="vName">Vessel Name</label>
+      <input type="text" id="vName" name="vName"><br></br></input>
+      <label for="shipLine">Steamship Line</label>
+      <input type="text" id="shipLine" name="shipLine"><br></br><br></br></input>
+
+      <label for="full_name">Full Name</label>
+      <select id="full_name" name="full_name" onchange="fill_badge_number()">
+        <option></option>
+        <option th:each="employee : ${employees}"
+                th:value="${employee.name}"
+                th:text="${employee.name}">
+              </option> 
+    </select><br></br>
+      
+      <input type="button" id="addRecord" name="addRecord" style="padding:16px" value="Add Record" onclick="productivity()"></input><br></br>
+    </div>
+  </div>
+
+  <!--Productivity Table-->
+  <div class="row" style="border: 4px solid navy; margin:8px;">
+    <div class="col-md-3" style="text-align:right; margin-top:8px; margin-bottom:8px;">
+      <label for="startTime">Start Time</label>
+      <input type="time" id="startTime" name="startTime"><br></br></input>
+      <label for="endTime">End Time</label>
+      <input type="time" id="endTime" name="endTime"><br></br></input>
+    </div>
+
+    <div class="col-md-3" style="text-align: right; margin-top:8px; margin-bottom:8px;">
+      <label for="numMoves">Moves</label>
+      <input type="text" id="numMoves" name="numMoves" size="10" onchange="fill_productivity()"><br></br></input>
+      <label for="productivity">Productivity</label>
+      <input type="text" id="productivity" name="productivity" size="10"><br></br></input>
+    </div>
+
+    
+  </div>
+
+</body>
   </html>

@@ -32,6 +32,9 @@ import java.util.List;
 @RequestMapping("/containers")
 public class ContainersController {
 
+    /* The below 4 autowired statements allow us to 
+    interact with each repository class. */
+
     @Autowired
     ContainersRepository containersRepository;
 
@@ -53,6 +56,7 @@ public class ContainersController {
         return mav;
     }
 
+    /* This method is used to simply return the "show" view */
     @GetMapping("/show")
     public ModelAndView show(Model model) throws ParseException {
        
@@ -64,46 +68,67 @@ public class ContainersController {
        // return new ModelAndView("show", "users", model);
     }
 
+    /* This method is executed when the user clicks the "Add Record"
+    button on the productivity form. It simply creates a new productivity
+    object, gets each relevant form field value from the HttpServletRequest,
+    and assigns the productivity object's values with the form values. The object
+    is then saved into the productivity database. */
     @ResponseBody
     @PostMapping("/submit_productivity")    
     public String submit_productivity(HttpServletRequest req) throws ParseException {
-        System.out.println("--------In SUBMIT_PRODUCTIVITY--------");
+
+        // This is the object that will ultimately be saved to the
+        // database
         Productivity prod_object = new Productivity();
-        String begin_date = req.getParameter("start_date");
-        System.out.println("********* BEGIN DATE: " + begin_date);
-        Date start_date = new SimpleDateFormat("yyyy-MM-dd").parse(begin_date);
+
+        // getting start date from servlet request
+        String start_date_string = req.getParameter("start_date");
+
+        // we must then convert the string to a date object and set the 
+        // productivity object's start date value accordingly
+        Date start_date = new SimpleDateFormat("yyyy-MM-dd").parse(start_date_string);
         prod_object.setMinOfTransmitted_Datetime(start_date);
+
+        // we do the same as above for the end date
         String end_date_string = req.getParameter("end_date");
         Date end_date = new SimpleDateFormat("yyyy-MM-dd").parse(end_date_string);
-        System.out.println("end date: " + end_date);
         prod_object.setMaxOfTransmittedDatetime(end_date);
+
         String badge_number = req.getParameter("badge_number");
-        System.out.println("badge number: " + badge_number);
         prod_object.setBadgeNumber(badge_number);
+
         String driver_shift_number = req.getParameter("driver_shift_number");
-        System.out.println("driver shift number: " + driver_shift_number);
         prod_object.setDriverShiftNumber(driver_shift_number);
+
         String ship_number = req.getParameter("ship_number");
-        System.out.println("ship number: " + ship_number);
         prod_object.setShipNumber(ship_number);
+
+        // unsure what to do with hatchcover moves...
         prod_object.setHatchcoverMoves(0);
+
         String crane_number = req.getParameter("crane_number");
-        System.out.println("crane number: " + crane_number);
         prod_object.setCraneNumber(crane_number);
+
+        // total driver shifts and moves are integers in the database, so we must
+        // parse them into an integer from a string
         String total_driver_shifts_string = req.getParameter("total_driver_shifts");
         Integer total_driver_shifts = Integer.parseInt(total_driver_shifts_string);
-        System.out.println("total driver shifts: " + total_driver_shifts);
         prod_object.setTotalDriverShifts(total_driver_shifts);
+
+
         String moves_string = req.getParameter("moves");
         Integer moves = Integer.parseInt(moves_string);
-        System.out.println("moves: " + moves);
         prod_object.setContMoves(moves);
+
         Integer calendar_year = end_date.getYear() + 1900;
-        System.out.println("calendar year: " + calendar_year);
         prod_object.setCalendarYear(calendar_year);
+
         Integer calendar_month = end_date.getMonth() + 1;
-        System.out.println("calendar month: " + (calendar_month));
         prod_object.setCyMonthSort(calendar_month);
+
+        // there is probably a better way to calculate
+        // fiscal month here, but this seems to work
+        // with every case
         Integer fiscal_month;
         if (calendar_month == 6) {
             fiscal_month = 12;
@@ -114,8 +139,12 @@ public class ContainersController {
         else {
             fiscal_month = (((calendar_month - 6) % 12) + 12);
         }
-        System.out.println("fiscal month: " + fiscal_month);
+
         prod_object.setFyMonthSort(fiscal_month);
+
+        // again, there's probably a better way to
+        // calculate fiscal year, but this seems to
+        // work
         Integer fiscal_year;
         if (calendar_month >= 7) {
             fiscal_year = calendar_year + 1;
@@ -124,65 +153,81 @@ public class ContainersController {
             fiscal_year = calendar_year;
         }
         prod_object.setFiscalYear(fiscal_year);
-        System.out.println("fiscal year: " + fiscal_year);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(end_date);
+        Integer day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
+        System.out.println("day of week: " + day_of_week);
+        prod_object.setDayOfWeek(day_of_week);
         productivityRepository.save(prod_object);
         return "test";
     }
 
+    /* This method is used to return the productivity template. In order to
+    populate the employee name dropdown menu, we are querying the employees
+    table and putting each employee whose department number is 12 in a list
+    and returning that list along with the template. */
     @GetMapping("/productivity")
     public ModelAndView productivity(Model model) {
         List<Employees> employees = employeesRepository.findEmployees();
+        List<String> vessel_codes = vesselRepository.findVesselCodes();
         ModelAndView mav = new ModelAndView();
         mav.addObject("employees", employees);
+        mav.addObject("vessel_codes", vessel_codes);
         mav.setViewName("productivity");
         return mav;
     }
 
-
+    /* This method is used by the productivity form to retrieve the badge number
+    of the employee chosen by the dropdown menu. It queries the employees table
+    and returns the badge number associated with the name chosen from the
+    dropdown menu */
     @PostMapping("/badge")
     @ResponseBody
     public String badge(HttpServletRequest req) throws ParseException {
-        System.out.println("---------- IN GETBADGENUMBER ----------");
+        //System.out.println("---------- IN GETBADGENUMBER ----------");
         String badge_number = employeesRepository.findBadgeNumber(req.getParameter("name"));
-        System.out.println("badge_number: " + badge_number);
+        //System.out.println("badge_number: " + badge_number);
         return badge_number;
     }
 
+    /* This method is used to autopopulate form fields in the
+    productivity form. Whenever the user enters a vessel code, 
+    that vessel code is passed to this method. The vessel database
+    is then queried to get all relevant information about the vessel
+    with that vessel code. The information is then put into a list and
+    referenced back at the view. */
     @PostMapping("/vessel")
     @ResponseBody
     public List<String> vessel(HttpServletRequest req) throws ParseException {
-        System.out.println("---------- IN VESSEL ----------");
-        System.out.println(req.getParameter("vessel_code"));
         Vessel vessel = vesselRepository.findByVesselCode(req.getParameter("vessel_code"));
         System.out.println(vessel);
-        List<String> return_list = Arrays.asList(vessel.getVesselName(), vessel.getLineName(), vessel.getLineCode()); 
-        System.out.println("________ " + vessel.getLineName());
+        List<String> return_list = Arrays.asList(vessel.getVesselName(), vessel.getLineName(), vessel.getLineCode());
         return return_list;
     }
     
+    /* This method is used by the show template whenever the user 
+    executes a lookup. The user must put in a vessel number, badge number,
+    crane number, beginning date, and ending date. These values are then used
+    to execute a query of the database. Since we're changing the table in the
+    view without refreshing the page, this method returns a string of HTML that 
+    replaces the current table html on the page. */
     @PostMapping("/retrieve")
     @ResponseBody
     public String retrieve(HttpServletRequest req) throws ParseException {
-        System.out.println("---------- IN RETRIEVE ----------");
+
         String begin_date = req.getParameter("begin_date");
-        System.out.println("!!!!!!!! begin_date: " + begin_date);
         Date from_date = new SimpleDateFormat("yyyy-MM-dd").parse(begin_date);
         String end_date = req.getParameter("end_date");
         Date to_date = new SimpleDateFormat("yyyy-MM-dd").parse(end_date);
-        System.out.println("from_date: " + from_date);
-        System.out.println("to_date: " + to_date);
-        Integer crane_number = Integer.parseInt(req.getParameter("crane_number"));
-        System.out.println("crane_number: " + crane_number);
-        Integer old_ship_number = Integer.parseInt(req.getParameter("current_ship_number"));
-        System.out.println("old_ship_number: " + old_ship_number);
-        Integer old_badge_number = Integer.parseInt(req.getParameter("current_badge_number"));
-        System.out.println("current_badge_number: " + old_badge_number);
+        String crane_number = req.getParameter("crane_number");
+        String old_ship_number = req.getParameter("current_ship_number");
+        String old_badge_number = req.getParameter("current_badge_number");
         List<Containers> containersList = containersRepository.findByTransmittedDatetimeBetween(from_date, to_date, old_badge_number, old_ship_number, crane_number);
-        if (containersList.isEmpty())
-            System.out.println("************************list is empty!");
-        else 
-            System.out.println("NOT EMPTY!");
         String return_string = "<thead><tr><th>Crane Number</th><th>Ship Number</th><th>Badge Number</th><th>Transmitted Datetime</th><th>Driver Shift Number</th></tr></thead><tbody><div id='retrieved'>";
+        
+        // each time through this loop, we are putting each container's attributes into the 
+        // HTML string that will constitute the table
         for (Containers container : containersList) {
             return_string = return_string + "<tr><td>" + container.getCraneNumber() + "</td>";
             return_string = return_string + "<td>" + container.getShipNumber() + "</td>";
@@ -191,46 +236,34 @@ public class ContainersController {
             return_string = return_string + "<td>" + container.getDriverShiftNumber() + "</td></tr>";
         }
         return_string = return_string + "</div></tbody>";
-        System.out.println("return_string: " + return_string);
         return return_string;
     }
 
 
-
+    /* This method is executed whenever the user clicks on the "Update Entries"
+    button on the show form. It executes the same query as in the "retrieve" method
+    above, and puts each matching entry into a list. Each object in the list then has
+    its values updated with the values from the HttpServletRequest, and then each
+    object is saved back into the database. Then, a new HTML string is constructed
+    that will replace the current table HTML on the page. We are also keeping track of
+    the number of updated entries, so each time an entry is updated we increment a counter. The
+    counter and the HTML string are put into a list and returned to the view. */
     @PostMapping("/edit")
     @ResponseBody
     public List<Object> edit(HttpServletRequest req) throws ParseException {
-        /*
-        String begin_date = req.getParameter("dateBeginning");
-        Date from_date = new SimpleDateFormat("yyyy/MM/dd").parse(begin_date);
-        String end_date = req.getParameter("dateEnd");
-        Date to_date = new SimpleDateFormat("yyyy/MM/dd").parse(end_date);
-        Integer crane_number = Integer.parseInt(req.getParameter("craneNumber"));
-        Integer old_ship_number = Integer.parseInt(req.getParameter("cVesselNumber"));
-        Integer new_ship_number = Integer.parseInt(req.getParameter("nVesselNumber"));
-        Integer old_badge_number = Integer.parseInt(req.getParameter("cBadgeNumber"));
-        Integer new_badge_number = Integer.parseInt(req.getParameter("nBadgeNumber"));
-        List<Containers> containersList = containersRepository.findByTransmittedDatetimeBetween(from_date, to_date, old_badge_number, old_ship_number, crane_number);
-        */
+
         String begin_date = req.getParameter("begin_date");
         Date from_date = new SimpleDateFormat("yyyy-MM-dd").parse(begin_date);
         String end_date = req.getParameter("end_date");
         Date to_date = new SimpleDateFormat("yyyy-MM-dd").parse(end_date);
-        System.out.println("from_date: " + from_date);
-        System.out.println("to_date: " + to_date);
-        Integer crane_number = Integer.parseInt(req.getParameter("crane_number"));
-        System.out.println("crane_number: " + crane_number);
-        Integer old_ship_number = Integer.parseInt(req.getParameter("current_ship_number"));
-        System.out.println("old_ship_number: " + old_ship_number);
-        Integer new_ship_number = Integer.parseInt(req.getParameter("new_ship_number"));
-        System.out.println("new_ship_number: " + new_ship_number);
-        Integer old_badge_number = Integer.parseInt(req.getParameter("current_badge_number"));
-        System.out.println("current_badge_number: " + old_badge_number);
-        Integer new_badge_number = Integer.parseInt(req.getParameter("new_badge_number"));
-        System.out.println("new_badge_number: " + new_badge_number);
+        String crane_number = req.getParameter("crane_number");
+        String old_ship_number = req.getParameter("current_ship_number");
+        String new_ship_number = req.getParameter("new_ship_number");
+        String old_badge_number = req.getParameter("current_badge_number");
+        String new_badge_number = req.getParameter("new_badge_number");
         List<Containers> containersList = containersRepository.findByTransmittedDatetimeBetween(from_date, to_date, old_badge_number, old_ship_number, crane_number);
         Integer number_of_updated_entries = 0;
-        for (Containers container : containersList){
+        for (Containers container : containersList) {
             container.setShipNumber(new_ship_number);
             container.setBadgeNumber(new_badge_number);
             containersRepository.save(container);
@@ -245,21 +278,18 @@ public class ContainersController {
             return_string = return_string + "<td>" + container.getDriverShiftNumber() + "</td></tr>";
         }
         return_string = return_string + "</div></tbody>";
-        System.out.println("return_string: " + return_string);
         List<Object> return_list = new ArrayList<Object>();
         return_list.add(return_string);
         return_list.add(number_of_updated_entries);
-        System.out.println("---------- RETURNING ----------");
         return return_list;
     }
 
     @PostMapping("/create")
     public ModelAndView create(HttpServletRequest req){
-        // badge_number, transmitted_datetime, driver_shift_number
-        Integer crane_number = Integer.parseInt(req.getParameter("crane_number"));
-        Integer ship_number = Integer.parseInt(req.getParameter("ship_number"));
-        Integer badge_number = Integer.parseInt(req.getParameter("badge_number"));
-        Integer driver_shift_number = Integer.parseInt(req.getParameter("driver_shift_number"));
+        String crane_number = req.getParameter("crane_number");
+        String ship_number = req.getParameter("ship_number");
+        String badge_number = req.getParameter("badge_number");
+        String driver_shift_number = req.getParameter("driver_shift_number");
         Date transmitted_datetime = new Date();
         Containers new_container = new Containers(crane_number, ship_number, badge_number, transmitted_datetime, driver_shift_number);
         containersRepository.save(new_container);

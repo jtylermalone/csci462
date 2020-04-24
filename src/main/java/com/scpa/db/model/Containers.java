@@ -17,25 +17,25 @@ public class Containers {
     @Column(name = "id")
     @Id @GeneratedValue private Integer id;
     @Column(name = "Crane_Num")
-    private Integer craneNumber;
+    private String craneNumber;
     @Column(name = "Ship_Num")
-    private Integer shipNumber;
+    private String shipNumber;
     @Column(name = "Badge_Num")
-    private Integer badgeNumber;
+    private String badgeNumber;
     @Column(name = "Transmitted_Datetime")
     private Date transmitted_datetime;
     @Column(name = "Driver_Shift_Number")
-    private Integer driver_shift_number;
+    private String driver_shift_number;
     
     public Containers(){
-        this.craneNumber = 0;
-        this.shipNumber = 0;
-        this.badgeNumber = 0;
+        this.craneNumber = "";
+        this.shipNumber = "";
+        this.badgeNumber = "";
         this.transmitted_datetime = new Date();
-        this.driver_shift_number = 0;
+        this.driver_shift_number = "";
     }
-    public Containers(Integer crane_number, Integer ship_number,
-                        Integer badge_number, Date transmitted_datetime, Integer driver_shift_number) {
+    public Containers(String crane_number, String ship_number,
+                        String badge_number, Date transmitted_datetime, String driver_shift_number) {
 
         this.craneNumber = crane_number;
         this.shipNumber = ship_number;
@@ -52,27 +52,27 @@ public class Containers {
         this.id = id;
     }
 
-    public Integer getCraneNumber() {
+    public String getCraneNumber() {
         return craneNumber;
     }
 
-    public void setCraneNumber(Integer craneNumber) {
+    public void setCraneNumber(String craneNumber) {
         this.craneNumber = craneNumber;
     }
 
-    public Integer getShipNumber() {
+    public String getShipNumber() {
         return shipNumber;
     }
 
-    public void setShipNumber(Integer shipNumber) {
+    public void setShipNumber(String shipNumber) {
         this.shipNumber = shipNumber;
     }
 
-    public Integer getBadgeNumber() {
+    public String getBadgeNumber() {
         return badgeNumber;
     }
 
-    public void setBadgeNumber(Integer badgeNumber) {
+    public void setBadgeNumber(String badgeNumber) {
         this.badgeNumber = badgeNumber;
     }
 
@@ -84,11 +84,11 @@ public class Containers {
         this.transmitted_datetime = transmitted_datetime;
     }
 
-    public Integer getDriverShiftNumber() {
+    public String getDriverShiftNumber() {
         return driver_shift_number;
     }
 
-    public void setDriverShiftNumber(Integer driver_shift_number) {
+    public void setDriverShiftNumber(String driver_shift_number) {
         this.driver_shift_number = driver_shift_number;
     }
 

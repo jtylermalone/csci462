@@ -410,6 +410,11 @@ table.dataTable td {
       width: 63%;
       display: inline-block;
     }
+
+    label {
+      color: navy;
+      font-weight: bold;
+    }
     </style>
     <script type="text/javascript" class="init">
       $(document).ready( function () {
@@ -470,7 +475,9 @@ table.dataTable td {
             type: "POST",
             success: function(response) {
               $("#container_table").html(response[0]);
+              if (response[1] > 0) {
               alert("Entries updated successfully!\n" + response[1] + " entries were updated.");
+              }
               $('#container_table').DataTable({ 
                       "destroy": true, //use for reinitialize datatable
                    });
@@ -485,8 +492,9 @@ table.dataTable td {
     </script>
   </head>
 
-  <body style="background-color:rgb(107, 196, 252)">
-    <img src="src\main\resources\templates\scpa.jpg" alt="SCPA logo"></img><br></br>
+  <body style="background-color:#E6E6E6"
+  >
+
     <h1 style="text-align:center;">Vessel Corrections</h1>
     <div class="row">
       <div class="col-md-6">
